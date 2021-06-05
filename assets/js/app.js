@@ -45,3 +45,70 @@ var xMin;
   var xMax;
   var yMin;
   var yMax;
+
+  var toolTip = d3
+  .tip()
+  .attr("class", "toolTip")
+  .offset([80,-60])
+  .html(function(data){
+      var stateName = data.state;
+      var pov = +data.poverty;
+      var smoke = +data.smokes;
+      return(stateName + "<br> Poverty(%): " + pov + "<br> Smoker Age (Median) " + smoke
+      );
+  });
+chart.call(toolTip);
+
+chart
+  .selectAll("circle")
+  .data(healthData)
+  .enter()
+  .append("circle")
+  .attr("cx",function(data, index){
+      return xLinearScale(data.poverty);
+  })
+  .attr("cy",function(data, index){
+      return yLinearScale(data.smokes);
+  })
+  .attr("r", "20")
+  .attr("stroke", "black")
+  .attr("opacity", 0.75)
+  .attr("fill", "salmon")
+  .on("mouseover", function(data ) {
+      toolTip.show(data,this);
+  })
+  .on("mouseout", function(data, index) {
+      toolTip.hide(data,this);
+  });
+
+
+svg.selectAll(".dot")
+.data(healthData)
+.enter()
+.append("text")
+.text(function(data){return data.abbr;})
+.attr("x", function(data){
+  return xLinearScale(data.poverty);
+})
+.attr("y", function(data) {
+  return yLinearScale(data.smokes);
+})
+.attr("font-size","10px")
+.attr("fill","blue")
+.style("text-anchor","middle");
+
+chart
+  .append("text")
+  .attr("transform", "rotate(-90)")
+  .attr("y", 0 - margin.left + 40)
+  .attr("x", 0 - height / 2)
+  .attr("dy","1em")
+  .attr("class", "axisText")
+  .text("Median Age of Smokers");
+
+chart
+  .append("text")
+  .attr("transform","translate(" + width / 2 + " , " + (height + margin.top + 30) + ")",)
+  .attr("class", "axisText")
+  .text("In Poverty (%)");
+});
