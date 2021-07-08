@@ -4,7 +4,7 @@ var margin = {top:20, right:40, bottom: 60, left: 100};
 var width = svgWidth - margin.left - margin.right;
 var height = svgHeight - margin.top - margin.bottom;
 
-Create SVG wrapper
+//Create SVG wrapper
 var svg = d3
     .select(".chart")
     .append("svg")
@@ -16,7 +16,7 @@ var chart = svg.append("g");
 
 d3.select(".chart").append("div").attr("class","tooltip").style("opacity",0);
 
-Import Data
+//Import Data
 d3.csv("data.csv", function(err, healthData) {
     if (err) throw err;
   console.log(healthData)
@@ -42,11 +42,31 @@ yLinearScale.domain([0, d3.max(healthData, function(data) {
 ]);
 
 var xMin;
-  var xMax;
-  var yMin;
-  var yMax;
+    var xMax;
+    var yMin;
+    var yMax;
 
-  var toolTip = d3
+    xMin = d3.min(healthData, function(data) {
+        return +data.poverty * 0.95;
+    });
+
+    xMax = d3.max(healthData, function(data) {
+        return +data.poverty * 1.05;
+    });
+
+    yMin = d3.min(healthData, function(data) {
+        return +data.smokes * 0.98;
+    });
+
+    yMax = d3.max(healthData, function(data) {
+        return +data.smokes *1.02;
+    });
+    
+    xLinearScale.domain([xMin, xMax]);
+    yLinearScale.domain([yMin, yMax]);
+
+
+var toolTip = d3
   .tip()
   .attr("class", "toolTip")
   .offset([80,-60])
