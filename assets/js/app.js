@@ -6,7 +6,7 @@ var height = svgHeight - margin.top - margin.bottom;
 
 //Create SVG wrapper
 var svg = d3
-    .select(".chart")
+    .select("#scatter")
     .append("svg")
     .attr("width",svgWidth)
     .attr("height",svgHeight)
@@ -14,11 +14,11 @@ var svg = d3
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 var chart = svg.append("g");
 
-d3.select(".chart").append("div").attr("class","tooltip").style("opacity",0);
+d3.select("#scatter").append("div").attr("class","tooltip").style("opacity",0);
 
 //Import Data
-d3.csv("data.csv", function(err, healthData) {
-    if (err) throw err;
+d3.csv("assets/Data/data.csv").then(function(healthData) {
+   // if (err) throw err;
   console.log(healthData)
 
   healthData.forEach(function(data) {
